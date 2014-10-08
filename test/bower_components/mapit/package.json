@@ -1,0 +1,20 @@
+
+{
+  "name": "mapit",
+  "version": "0.0.2",
+  "description": "Add some sugar to a commonly used pattern",
+  "license": "MIT",
+  "main": "./mapit.js",
+  "devDependencies": {
+    "should": "4.0.4"
+  },
+  "scripts": {
+    "test": "node ./test.js"
+  },
+  "author": "Ajay MT <ajay.tatachar@gmail.com> (http://ajaymt.github.com)",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/AjayMT/mapit.js.git"
+  },
+  "keywords": ["utility"]
+}

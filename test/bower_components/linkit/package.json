@@ -1,0 +1,20 @@
+
+{
+  "name": "linkit",
+  "version": "0.0.1",
+  "description": "Method chaining everywhere",
+  "license": "MIT",
+  "main": "./linkit.js",
+  "devDependencies": {
+    "should": "4.0.4"
+  },
+  "scripts": {
+    "test": "node ./test.js"
+  },
+  "author": "Ajay MT <ajay.tatachar@gmail.com> (http://ajaymt.github.com)",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/AjayMT/linkit.js.git"
+  },
+  "keywords": ["utility"]
+}

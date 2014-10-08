@@ -1,0 +1,21 @@
+
+{
+  "name": "bowcat",
+  "version": "0.0.1",
+  "description": "Quickly concatenate bower dependencies",
+  "main": "./bowcat.js",
+  "bin": {
+    "bowcat": "./bowcat.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "minimist": "1.1.0",
+    "lodash": "2.4.1"
+  },
+  "author": "Ajay MT <ajay.tatachar@gmail.com> (http://ajaymt.github.com)",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/AjayMT/bowcatgit"
+  },
+  "keywords": ["utility", "cli", "bower"]
+}

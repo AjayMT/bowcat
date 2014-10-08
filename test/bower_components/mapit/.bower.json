@@ -1,0 +1,32 @@
+{
+  "name": "mapit",
+  "main": "mapit.js",
+  "version": "0.0.2",
+  "authors": [
+    "Ajay MT <ajay.tatachar@gmail.com> (http://ajaymt.github.com)"
+  ],
+  "description": "Add some sugar to a commonly used pattern",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "utility"
+  ],
+  "license": "MIT",
+  "homepage": "http://github.com/AjayMT/mapit.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "test.js"
+  ],
+  "_release": "0.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.0.2",
+    "commit": "64a4045adc800d032eece8559fb4f7a8ea75bc1b"
+  },
+  "_source": "git://github.com/AjayMT/mapit.js.git",
+  "_target": "~0.0.2",
+  "_originalSource": "mapit",
+  "_direct": true
+}
