@@ -28,7 +28,7 @@ var concatedPkgs = [];
 
 function concatPackage (package, outDir) {
   var bowerJSON = JSON.parse(fs.readFileSync(path.join(package, 'bower.json')));
-  var deps = bowerJSON.dependencies || [];
+  var deps = bowerJSON.dependencies || {};
 
   _.each(Object.keys(deps), function (pkg, i, l) {
     var components = package.split(path.sep);
