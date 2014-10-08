@@ -10,7 +10,7 @@ var _ = require('lodash');
 var opts = require('minimist')(process.argv.slice(2));
 
 if (opts.help) {
-  console.log('Usage: bowcat <input-dir> -o <output-dir>');
+  console.log('Usage: bowcat [<input-dir>] [-o <output-dir>]');
   process.exit(0);
 }
 
