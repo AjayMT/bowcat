@@ -1,7 +1,7 @@
 
 {
   "name": "bowcat",
-  "version": "0.0.2",
+  "version": "0.0.21",
   "description": "Quickly concatenate bower dependencies",
   "main": "./bowcat.js",
   "bin": {
@@ -24,7 +24,7 @@
   "author": "Ajay MT <ajay.tatachar@gmail.com> (http://ajaymt.github.com)",
   "repository": {
     "type": "git",
-    "url": "http://github.com/AjayMT/bowcatgit"
+    "url": "http://github.com/AjayMT/bowcat.git"
   },
   "keywords": ["utility", "cli", "bower"]
 }
