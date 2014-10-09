@@ -33,6 +33,7 @@ function concatPackage (package, outDir) {
 
   var bowerJSON = JSON.parse(fs.readFileSync(path.join(package, 'bower.json')));
   var deps = bowerJSON.dependencies || {};
+  var mains = bowerJSON.main || [];
 
   concatedPkgs.push(path.basename(package));
 
@@ -44,6 +45,12 @@ function concatPackage (package, outDir) {
 
 
   var files = fs.readdirSync(package);
+
+  files = _.filter(files, function (f) {
+    return _.some(mains, function (m) { return _.contains(m, f); })
+        || _.contains(mains, f);
+  });
+
   files = _.map(files, function (f) {
     return path.join(package, f);
   });
