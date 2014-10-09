@@ -7,6 +7,7 @@ var path = require('path');
 var fs = require('fs');
 
 var _ = require('lodash');
+var rimraf = require('rimraf');
 
 var opts = require('minimist')(process.argv.slice(2));
 
@@ -87,7 +88,8 @@ function concatPackage (package, outDir, minified) {
   _.each(Object.keys(deps), function (pkg, i, l) {
     var components = package.split(path.sep);
     var pkgpath = components.slice(0, -1).join(path.sep);
-    concatPackage(path.join(pkgpath, pkg));
+
+    concatPackage(path.join(pkgpath, pkg), outDir, minified);
   });
 
   var files = constructFileList(package, mains, minified);
@@ -116,7 +118,8 @@ function concatPackage (package, outDir, minified) {
 function concatPackages (packages, outDir, minified) {
   if (! outDir) outDir = path.join('.', 'build');
 
-  if (! fs.existsSync(outDir)) fs.mkdirSync(outDir);
+  if (fs.existsSync(outDir)) rimraf.sync(outDir);
+  fs.mkdirSync(outDir);
 
   _.each(packages, function (package, i, l) {
     concatPackage(package, outDir, minified);
