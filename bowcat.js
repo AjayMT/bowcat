@@ -43,25 +43,23 @@ function constructFileList (dir, mains, minified) {
   });
 
   _.each(files, function (f, i, l) {
-    if (! f) return;
-
-    if (fs.statSync(f).isDirectory()) {
-      files.splice(i, 1);
+    if (fs.statSync(f).isDirectory())
       files = files.concat(constructFileList(f, mains, minified));
-    }
   });
 
   files = _.filter(files, function (f) {
-    f = path.basename(f).split('.').slice(0, -1).join('.');
+    if (fs.statSync(f).isDirectory()) return false;
+
+    var fname = path.basename(f).split('.').slice(0, -1).join('.');
 
     var include = _.some(mains, function (m) {
       m = path.basename(m).split('.').slice(0, -1).join('.');
-      return m === f;
+      return m === fname;
     });
 
     if (typeof mains === 'string') {
-      mains = path.basename(mains).split('.').slice(0, -1).join('.');
-      include = (mains === f);
+      var mainsName = path.basename(mains).split('.').slice(0, -1).join('.');
+      include = (mainsName === fname);
     }
 
     if (minified) include = include
