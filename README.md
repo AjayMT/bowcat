@@ -1,5 +1,7 @@
 
 # bowcat
+[![Build Status](https://travis-ci.org/AjayMT/bowcat.svg)](https://travis-ci.org/AjayMT/bowcat)
+
 Quickly concatenate your project's bower dependencies. Like [grunt-bower-concat](http://npmjs.org/grunt-bower-concat) but without the weight and complexity of grunt.
 
 ## Installation
