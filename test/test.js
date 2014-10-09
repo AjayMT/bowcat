@@ -11,7 +11,7 @@ var rimraf = require('rimraf');
 var bowcat = path.join(__dirname, '..', 'bowcat.js');
 var buildPath = path.join(__dirname, 'build');
 
-exec([bowcat, __dirname, '-o', buildPath], function (err, out, code) {
+exec([bowcat, __dirname, '-o', buildPath, '-m'], function (err, out, code) {
   var jsPath = path.join(buildPath, 'build.js');
   var cssPath = path.join(buildPath, 'build.css');
 
@@ -19,6 +19,8 @@ exec([bowcat, __dirname, '-o', buildPath], function (err, out, code) {
   var buildcss = fs.readFileSync(cssPath, { encoding: 'utf-8' });
 
   buildjs.indexOf('// foo.js').should.be.above(buildjs.indexOf('// bar.js'));
+  buildjs.indexOf('// foo.min.js')
+  .should.be.above(buildjs.indexOf('// bar.js'));
   buildcss.indexOf('/* foo.css */')
   .should.be.above(buildcss.indexOf('/* bar.css */'));
 

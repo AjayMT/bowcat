@@ -10,10 +10,11 @@ var _ = require('lodash');
 var opts = require('minimist')(process.argv.slice(2));
 
 if (opts.help) {
-  console.log('Usage: bowcat [<input-dir>] [-o <output-dir>]');
+  console.log('Usage: bowcat [<input-dir>] [-o <output-dir>] [--min | -m]');
   process.exit(0);
 }
 
+var includeMins = opts.min || opts.m;
 var inputDir = opts._[0] || '.';
 var outputDir = opts.o || path.join('.', 'build');
 
@@ -28,7 +29,7 @@ pkgs = _.map(pkgs, function (p) {
 
 var concatedPkgs = [];
 
-function concatPackage (package, outDir) {
+function concatPackage (package, outDir, minified) {
   if (_.contains(concatedPkgs, path.basename(package))) return;
 
   var bowerJSON = JSON.parse(fs.readFileSync(path.join(package, 'bower.json')));
@@ -47,8 +48,14 @@ function concatPackage (package, outDir) {
   var files = fs.readdirSync(package);
 
   files = _.filter(files, function (f) {
-    return _.some(mains, function (m) { return _.contains(m, f); })
-        || _.contains(mains, f);
+    var include = _.some(mains, function (m) { return _.contains(m, f); })
+               || _.contains(mains, f);
+
+    if (minified) include = include
+                         || f.indexOf('.min.js') === (f.length - 7)
+                         || f.indexOf('.min.css') === (f.length - 8);
+
+    return include;
   });
 
   files = _.map(files, function (f) {
@@ -79,7 +86,7 @@ function concatPackages (packages, outDir) {
   if (! fs.existsSync(outDir)) fs.mkdirSync(outDir);
 
   _.each(packages, function (package, i, l) {
-    concatPackage(package, outDir);
+    concatPackage(package, outDir, includeMins);
   });
 }
 
