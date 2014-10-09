@@ -31,4 +31,4 @@ Concatenate a list of packages. 'packages' is the list of full paths of packages
 Construct a list of files to concatenate for a specific package. 'dir' is the path to the package, 'mains' is the contents of the 'main' field in the package's bower.json, 'minified' is whether or not to include minified files.
 
 ## License
-MIT License.
+MIT License. See `./LICENSE` for details.
