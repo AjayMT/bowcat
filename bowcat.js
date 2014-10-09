@@ -8,12 +8,19 @@ var fs = require('fs');
 
 var _ = require('lodash');
 var rimraf = require('rimraf');
+var debug = require('debug')('bowcat');
 
 var opts = require('minimist')(process.argv.slice(2));
 
+var usage = 'Usage: bowcat [<input-dir>] [-o <output-dir>] [--min | -m]\n\n'
+          + 'Quickly concatenate bower dependencies.\n\n'
+          + 'Options:\n'
+          + '  -o <output-dir>  Where to write the concatenated dependencies to\n'
+          + '  --min, -m        Include only minified files [default: false]\n'
+
 // opt parsing
 if (opts.help) {
-  console.log('Usage: bowcat [<input-dir>] [-o <output-dir>] [--min | -m]');
+  process.stdout.write(usage);
   process.exit(0);
 }
 
@@ -92,6 +99,8 @@ function concatPackage (package, outDir, minified) {
     concatPackage(path.join(pkgpath, pkg), outDir, minified);
   });
 
+  debug('concatenating package ' + path.basename(package) + '...');
+
   var files = constructFileList(package, mains, minified);
   var concatJS = '', concatCSS = '';
 
@@ -99,11 +108,17 @@ function concatPackage (package, outDir, minified) {
     var contents = fs.readFileSync(filepath) + '\n';
     var ext = filepath.split('.')[filepath.split('.').length - 1];
 
+    if (ext === 'js' || ext === 'css')
+      debug('including file ' + filepath + '...');
+
     if (ext === 'js')
       concatJS += contents;
     else if (ext === 'css')
       concatCSS += contents;
   });
+
+  if (concatJS !== '' || concatCSS !== '')
+    debug('writing files...');
 
   if (concatJS !== '')
     fs.appendFileSync(path.join(outDir, 'build.js'), concatJS);

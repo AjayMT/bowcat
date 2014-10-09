@@ -1,7 +1,7 @@
 
 {
   "name": "bowcat",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Quickly concatenate bower dependencies",
   "main": "./bowcat.js",
   "bin": {
@@ -11,7 +11,8 @@
   "dependencies": {
     "minimist": "1.1.0",
     "lodash": "2.4.1",
-    "rimraf": "2.2.8"
+    "rimraf": "2.2.8",
+    "debug": "2.0.0"
   },
   "devDependencies": {
     "should": "4.0.4",
