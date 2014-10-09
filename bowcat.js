@@ -2,6 +2,7 @@
 
 /* global require, module */
 
+// require()s
 var path = require('path');
 var fs = require('fs');
 
@@ -9,6 +10,7 @@ var _ = require('lodash');
 
 var opts = require('minimist')(process.argv.slice(2));
 
+// opt parsing
 if (opts.help) {
   console.log('Usage: bowcat [<input-dir>] [-o <output-dir>] [--min | -m]');
   process.exit(0);
@@ -29,6 +31,52 @@ pkgs = _.map(pkgs, function (p) {
 
 var concatedPkgs = [];
 
+// constructFileList: create a list of files to concat for a particular
+// package. 'dir' is the path to the package, 'mains' is the 'main' field
+// in the package's bower.json, 'minified' is whether or not to include
+// minified files
+function constructFileList (dir, mains, minified) {
+  var files = fs.readdirSync(dir);
+
+  files = _.map(files, function (f) {
+    return path.join(dir, f);
+  });
+
+  _.each(files, function (f, i, l) {
+    if (! f) return;
+
+    if (fs.statSync(f).isDirectory()) {
+      files.splice(i, 1);
+      files = files.concat(constructFileList(f, mains, minified));
+    }
+  });
+
+  files = _.filter(files, function (f) {
+    f = path.basename(f).split('.').slice(0, -1).join('.');
+
+    var include = _.some(mains, function (m) {
+      m = path.basename(m).split('.').slice(0, -1).join('.');
+      return m === f;
+    });
+
+    if (typeof mains === 'string') {
+      mains = path.basename(mains).split('.').slice(0, -1).join('.');
+      include = (mains === f);
+    }
+
+    if (minified) include = include
+                         || f.indexOf('.min.js') === (f.length - 7)
+                         || f.indexOf('.min.css') === (f.length - 8);
+
+    return include;
+  });
+
+  return files;
+}
+
+// concatPackage: concatenate a single package. 'package' is the full path to
+// the package directory, 'outDir' is the output directory, 'minified'
+// is whether or not to include minified files
 function concatPackage (package, outDir, minified) {
   if (_.contains(concatedPkgs, path.basename(package))) return;
 
@@ -44,32 +92,16 @@ function concatPackage (package, outDir, minified) {
     concatPackage(path.join(pkgpath, pkg));
   });
 
-
-  var files = fs.readdirSync(package);
-
-  files = _.filter(files, function (f) {
-    var include = _.some(mains, function (m) { return _.contains(m, f); })
-               || _.contains(mains, f);
-
-    if (minified) include = include
-                         || f.indexOf('.min.js') === (f.length - 7)
-                         || f.indexOf('.min.css') === (f.length - 8);
-
-    return include;
-  });
-
-  files = _.map(files, function (f) {
-    return path.join(package, f);
-  });
-
+  var files = constructFileList(package, mains, minified);
   var concatJS = '', concatCSS = '';
 
   _.each(files, function (filepath, i, l) {
     var contents = fs.readFileSync(filepath) + '\n';
+    var ext = filepath.split('.')[filepath.split('.').length - 1];
 
-    if (filepath.indexOf('js') === (filepath.length - 2))
+    if (ext === 'js')
       concatJS += contents;
-    else if (filepath.indexOf('css') === (filepath.length - 3))
+    else if (ext === 'css')
       concatCSS += contents;
   });
 
@@ -80,17 +112,24 @@ function concatPackage (package, outDir, minified) {
     fs.appendFileSync(path.join(outDir, 'build.css'), concatCSS);
 }
 
-function concatPackages (packages, outDir) {
+// concatPackages: concatenate a list of packages ('packages'). 'outDir'
+// is the output directory, 'minified' is whether or not to include
+// minified files.
+function concatPackages (packages, outDir, minified) {
   if (! outDir) outDir = path.join('.', 'build');
 
   if (! fs.existsSync(outDir)) fs.mkdirSync(outDir);
 
   _.each(packages, function (package, i, l) {
-    concatPackage(package, outDir, includeMins);
+    concatPackage(package, outDir, minified);
   });
 }
 
-module.exports.concatPackages = concatPackages;
+module.exports = {
+  concatPackage: concatPackage,
+  concatPackages: concatPackages,
+  constructFileList: constructFileList
+};
 
 if (require.main === module)
-  concatPackages(pkgs, outputDir);
+  concatPackages(pkgs, outputDir, includeMins);

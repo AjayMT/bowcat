@@ -1,6 +1,6 @@
 
 {
-  "main": ["./index.js", "./style.css"],
+  "main": ["./js/index.js", "./style.css"],
   "dependencies": {
     "bar": "*"
   }
