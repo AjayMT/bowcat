@@ -14,8 +14,10 @@ if (opts.help) {
   process.exit(0);
 }
 
-var inputDir = path.resolve(opts._[0]) || '.';
+var inputDir = opts._[0] || '.';
 var outputDir = opts.o || path.join('.', 'build');
+
+inputDir = path.resolve(inputDir);
 outputDir = path.resolve(outputDir);
 
 var pkgs = fs.readdirSync(path.join(inputDir, 'bower_components'));
@@ -27,16 +29,19 @@ pkgs = _.map(pkgs, function (p) {
 var concatedPkgs = [];
 
 function concatPackage (package, outDir) {
+  if (_.contains(concatedPkgs, path.basename(package))) return;
+
   var bowerJSON = JSON.parse(fs.readFileSync(path.join(package, 'bower.json')));
   var deps = bowerJSON.dependencies || {};
 
+  concatedPkgs.push(path.basename(package));
+
   _.each(Object.keys(deps), function (pkg, i, l) {
     var components = package.split(path.sep);
-    var pkgpath = components.slice(components.length - 1).join(path.sep);
+    var pkgpath = components.slice(0, -1).join(path.sep);
     concatPackage(path.join(pkgpath, pkg));
   });
 
-  if (_.contains(concatedPkgs, path.basename(package))) return;
 
   var files = fs.readdirSync(package);
   files = _.map(files, function (f) {
@@ -55,18 +60,16 @@ function concatPackage (package, outDir) {
   });
 
   if (concatJS !== '')
-    fs.writeFileSync(path.join(outDir, 'build.js'), concatJS);
+    fs.appendFileSync(path.join(outDir, 'build.js'), concatJS);
 
   if (concatCSS !== '')
-    fs.writeFileSync(path.join(outDir, 'build.css'), concatCSS);
-
-  concatedPkgs.push(path.basename(package));
+    fs.appendFileSync(path.join(outDir, 'build.css'), concatCSS);
 }
 
 function concatPackages (packages, outDir) {
   if (! outDir) outDir = path.join('.', 'build');
 
-  fs.mkdirSync(outDir);
+  if (! fs.existsSync(outDir)) fs.mkdirSync(outDir);
 
   _.each(packages, function (package, i, l) {
     concatPackage(package, outDir);

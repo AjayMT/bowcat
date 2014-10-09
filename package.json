@@ -12,6 +12,14 @@
     "minimist": "1.1.0",
     "lodash": "2.4.1"
   },
+  "devDependencies": {
+    "should": "4.0.4",
+    "exec": "0.1.2",
+    "rimraf": "2.2.8"
+  },
+  "scripts": {
+    "test": "node ./test/test.js"
+  },
   "author": "Ajay MT <ajay.tatachar@gmail.com> (http://ajaymt.github.com)",
   "repository": {
     "type": "git",
