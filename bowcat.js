@@ -63,9 +63,9 @@ function constructFileList (dir, mains, minified) {
       include = (mainsName === fname);
     }
 
-    if (minified) include = include
-                         || f.indexOf('.min.js') === (f.length - 7)
-                         || f.indexOf('.min.css') === (f.length - 8);
+    if (minified)
+      include = f.indexOf('.min.js') === (f.length - 7)
+             || f.indexOf('.min.css') === (f.length - 8);
 
     return include;
   });
