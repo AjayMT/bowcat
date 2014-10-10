@@ -8,6 +8,7 @@ var fs = require('fs');
 
 var _ = require('lodash');
 var rimraf = require('rimraf');
+var json = require('bower-json');
 var debug = require('debug')('bowcat');
 
 var opts = require('minimist')(process.argv.slice(2));
@@ -65,11 +66,6 @@ function constructFileList (dir, mains, minified) {
       return m === fname;
     });
 
-    if (typeof mains === 'string') {
-      var mainsName = path.basename(mains).split('.').slice(0, -1).join('.');
-      include = (mainsName === fname);
-    }
-
     if (minified)
       include = f.indexOf('.min.js') === (f.length - 7)
              || f.indexOf('.min.css') === (f.length - 8);
@@ -86,7 +82,10 @@ function constructFileList (dir, mains, minified) {
 function concatPackage (package, outDir, minified) {
   if (_.contains(concatedPkgs, path.basename(package))) return;
 
-  var bowerJSON = JSON.parse(fs.readFileSync(path.join(package, 'bower.json')));
+  var regularJSON = JSON.parse(
+    fs.readFileSync(path.join(package, 'bower.json'))
+  );
+  var bowerJSON = json.normalize(regularJSON);
   var deps = bowerJSON.dependencies || {};
   var mains = bowerJSON.main || [];
 
