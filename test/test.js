@@ -27,7 +27,7 @@ exec([bowcat, __dirname, '-o', buildPath], function (err, out, code) {
 
     buildjs.indexOf('// foo.min.js')
     .should.be.above(buildjs.indexOf('// bar.js'));
-  });
 
-  rimraf.sync(buildPath);
+    rimraf.sync(buildPath);
+  });
 });
