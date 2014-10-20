@@ -79,28 +79,28 @@ function constructFileList (dir, mains, minified) {
 // concatPackage: concatenate a single package. 'package' is the full path to
 // the package directory, 'outDir' is the output directory, 'minified'
 // is whether or not to include minified files
-function concatPackage (package, outDir, minified) {
-  if (_.contains(concatedPkgs, path.basename(package))) return;
+function concatPackage (pack, outDir, minified) {
+  if (_.contains(concatedPkgs, path.basename(pack))) return;
 
   var regularJSON = JSON.parse(
-    fs.readFileSync(path.join(package, 'bower.json'))
+    fs.readFileSync(path.join(pack, 'bower.json'))
   );
   var bowerJSON = json.normalize(regularJSON);
   var deps = bowerJSON.dependencies || {};
   var mains = bowerJSON.main || [];
 
-  concatedPkgs.push(path.basename(package));
+  concatedPkgs.push(path.basename(pack));
 
   _.each(Object.keys(deps), function (pkg, i, l) {
-    var components = package.split(path.sep);
+    var components = pack.split(path.sep);
     var pkgpath = components.slice(0, -1).join(path.sep);
 
     concatPackage(path.join(pkgpath, pkg), outDir, minified);
   });
 
-  debug('concatenating package ' + path.basename(package) + '...');
+  debug('concatenating package ' + path.basename(pack) + '...');
 
-  var files = constructFileList(package, mains, minified);
+  var files = constructFileList(pack, mains, minified);
   var concatJS = '', concatCSS = '';
 
   _.each(files, function (filepath, i, l) {
@@ -135,8 +135,8 @@ function concatPackages (packages, outDir, minified) {
   if (fs.existsSync(outDir)) rimraf.sync(outDir);
   fs.mkdirSync(outDir);
 
-  _.each(packages, function (package, i, l) {
-    concatPackage(package, outDir, minified);
+  _.each(packages, function (pack, i, l) {
+    concatPackage(pack, outDir, minified);
   });
 }
 
