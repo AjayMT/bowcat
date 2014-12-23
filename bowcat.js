@@ -9,6 +9,7 @@ var fs = require('fs');
 var _ = require('lodash');
 var rimraf = require('rimraf');
 var json = require('bower-json');
+var bowerDirectory = require('bower-directory');
 var debug = require('debug')('bowcat');
 
 var opts = require('minimist')(process.argv.slice(2));
@@ -29,13 +30,14 @@ var includeMins = opts.min || opts.m;
 var inputDir = opts._[0] || '.';
 var outputDir = opts.o || path.join('.', 'build');
 
-inputDir = path.resolve(inputDir);
+inputDir = bowerDirectory.sync({ cwd: path.resolve(inputDir) });
+
 outputDir = path.resolve(outputDir);
 
-var pkgs = fs.readdirSync(path.join(inputDir, 'bower_components'));
+var pkgs = fs.readdirSync(inputDir);
 
 pkgs = _.map(pkgs, function (p) {
-  return path.join(inputDir, 'bower_components', p);
+  return path.join(inputDir, p);
 });
 
 var concatedPkgs = [];
