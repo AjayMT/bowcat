@@ -1,0 +1,7 @@
+
+{
+  "main": ["./js/index.js", "./style.css"],
+  "dependencies": {
+    "bar": "*"
+  }
+}

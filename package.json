@@ -8,6 +8,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "bower-directory": "^1.0.0",
     "bower-json": "^0.4.0",
     "debug": "2.0.0",
     "lodash": "2.4.1",
