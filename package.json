@@ -17,10 +17,11 @@
   },
   "devDependencies": {
     "should": "4.0.4",
-    "exec": "0.1.2"
+    "exec": "0.1.2",
+    "mocha": "2.1.0"
   },
   "scripts": {
-    "test": "node ./test/test.js"
+    "test": "node_modules/.bin/mocha"
   },
   "author": "Ajay MT <ajay.tatachar@gmail.com> (http://ajaymt.github.com)",
   "repository": {

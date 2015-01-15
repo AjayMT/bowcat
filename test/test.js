@@ -1,5 +1,5 @@
 
-/* global require */
+/* global require, describe, it, afterEach */
 
 var path = require('path');
 var fs = require('fs');
@@ -11,46 +11,57 @@ var rimraf = require('rimraf');
 var bowcat = path.join(__dirname, '..', 'bowcat.js');
 var buildPath = path.join(__dirname, 'build');
 
-// Test with the default directory `bower_components`
-exec([bowcat, __dirname, '-o', buildPath], function (err, out, code) {
-  var jsPath = path.join(buildPath, 'build.js');
-  var cssPath = path.join(buildPath, 'build.css');
+describe('bowcat', function () {
+  it('should work with bower_components', function (done) {
+    exec([bowcat, __dirname, '-o', buildPath], function (err, out, code) {
+      var jsPath = path.join(buildPath, 'build.js');
+      var cssPath = path.join(buildPath, 'build.css');
 
-  var buildjs = fs.readFileSync(jsPath, { encoding: 'utf-8' });
-  var buildcss = fs.readFileSync(cssPath, { encoding: 'utf-8' });
+      var buildjs = fs.readFileSync(jsPath, { encoding: 'utf-8' });
+      var buildcss = fs.readFileSync(cssPath, { encoding: 'utf-8' });
 
-  buildjs.indexOf('// foo.js').should.be.above(buildjs.indexOf('// bar.js'));
-  buildcss.indexOf('/* foo.css */')
-  .should.be.above(buildcss.indexOf('/* bar.css */'));
+      buildjs.indexOf('// foo.js').should.be.above(buildjs.indexOf('// bar.js'));
+      buildcss.indexOf('/* foo.css */')
+      .should.be.above(buildcss.indexOf('/* bar.css */'));
 
-  exec([bowcat, __dirname, '-o', buildPath, '-m'], function (err, out, code) {
-    var buildjs = fs.readFileSync(jsPath, { encoding: 'utf-8' });
+      exec([bowcat, __dirname, '-o', buildPath, '-m'], function (err, out, code) {
+        var buildjs = fs.readFileSync(jsPath, { encoding: 'utf-8' });
 
-    buildjs.indexOf('// foo.min.js')
-    .should.be.above(buildjs.indexOf('// bar.js'));
+        buildjs.indexOf('// foo.min.js')
+        .should.be.above(buildjs.indexOf('// bar.js'));
 
-    rimraf.sync(buildPath);
+        done();
+      });
+    });
   });
-});
 
-// Test with a custom directory `components` (via .bowerrc)
-exec([bowcat, path.join(__dirname, 'alternate'), '-o', buildPath], function (err, out, code) {
-  var jsPath = path.join(buildPath, 'build.js');
-  var cssPath = path.join(buildPath, 'build.css');
+  it('should work with other directories too', function (done) {
+    exec([bowcat, path.join(__dirname, 'alternate'), '-o', buildPath],
+         function (err, out, code) {
+           var jsPath = path.join(buildPath, 'build.js');
+           var cssPath = path.join(buildPath, 'build.css');
 
-  var buildjs = fs.readFileSync(jsPath, { encoding: 'utf-8' });
-  var buildcss = fs.readFileSync(cssPath, { encoding: 'utf-8' });
+           var buildjs = fs.readFileSync(jsPath, { encoding: 'utf-8' });
+           var buildcss = fs.readFileSync(cssPath, { encoding: 'utf-8' });
 
-  buildjs.indexOf('// foo.js').should.be.above(buildjs.indexOf('// bar.js'));
-  buildcss.indexOf('/* foo.css */')
-  .should.be.above(buildcss.indexOf('/* bar.css */'));
+           buildjs.indexOf('// foo.js').should.be
+           .above(buildjs.indexOf('// bar.js'));
+           buildcss.indexOf('/* foo.css */')
+           .should.be.above(buildcss.indexOf('/* bar.css */'));
 
-  exec([bowcat, __dirname, '-o', buildPath, '-m'], function (err, out, code) {
-    var buildjs = fs.readFileSync(jsPath, { encoding: 'utf-8' });
+           exec([bowcat, __dirname, '-o', buildPath, '-m'],
+                function (err, out, code) {
+                  var buildjs = fs.readFileSync(jsPath, { encoding: 'utf-8' });
 
-    buildjs.indexOf('// foo.min.js')
-    .should.be.above(buildjs.indexOf('// bar.js'));
+                  buildjs.indexOf('// foo.min.js')
+                  .should.be.above(buildjs.indexOf('// bar.js'));
 
-    rimraf.sync(buildPath);
+                  done();
+                });
+         });
+  });
+
+  afterEach(function (done) {
+    rimraf(buildPath, done);
   });
 });
