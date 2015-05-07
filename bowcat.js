@@ -84,8 +84,13 @@ function constructFileList (dir, mains, minified) {
 function concatPackage (pack, outDir, minified) {
   if (_.contains(concatedPkgs, path.basename(pack))) return;
 
+  var bowerFile = 'bower.json';
+
+  if (! fs.existsSync(path.join(pack, bowerFile)))
+    bowerFile = '.bower.json';
+
   var regularJSON = JSON.parse(
-    fs.readFileSync(path.join(pack, 'bower.json'))
+    fs.readFileSync(path.join(pack, bowerFile))
   );
   var bowerJSON = json.normalize(regularJSON);
   var deps = bowerJSON.dependencies || {};
