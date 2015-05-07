@@ -1,6 +1,7 @@
+
 {
   "name": "bowcat",
-  "version": "0.0.32",
+  "version": "0.0.4",
   "description": "Quickly concatenate bower dependencies",
   "main": "./bowcat.js",
   "bin": {
