@@ -75,6 +75,10 @@ function constructFileList (dir, mains, minified) {
     return include;
   });
 
+  if (minified && files.length === 0) {
+    return constructFileList(dir, mains, false);
+  }
+
   return files;
 }
 
