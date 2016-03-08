@@ -7,7 +7,6 @@ var path = require('path');
 var fs = require('fs');
 
 var _ = require('lodash');
-var rimraf = require('rimraf');
 var json = require('bower-json');
 var bowerDirectory = require('bower-directory');
 var debug = require('debug')('bowcat');
@@ -143,9 +142,15 @@ function concatPackage (pack, outDir, minified) {
 function concatPackages (packages, outDir, minified) {
   if (! outDir) outDir = path.join('.', 'build');
 
-  if (fs.existsSync(outDir)) rimraf.sync(outDir);
-  fs.mkdirSync(outDir);
-
+  if (!fs.existsSync(outDir)) fs.mkdirSync(outDir);
+  var jsFileName = path.join(outDir, 'build.js');
+  if (fs.existsSync(jsFileName)){
+    fs.truncateSync(jsFileName, 0);
+  }
+  var cssFileName = path.join(outDir, 'build.css');
+  if (fs.existsSync(cssFileName)){
+    fs.truncateSync(cssFileName, 0);
+  }
   _.each(packages, function (pack, i, l) {
     concatPackage(pack, outDir, minified);
   });
