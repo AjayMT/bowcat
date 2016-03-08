@@ -1,7 +1,7 @@
 
 {
   "name": "bowcat",
-  "version": "0.0.5",
+  "version": "1.0.0",
   "description": "Quickly concatenate bower dependencies",
   "main": "./bowcat.js",
   "bin": {
@@ -18,7 +18,8 @@
   "devDependencies": {
     "should": "4.0.4",
     "exec": "0.1.2",
-    "mocha": "2.1.0"
+    "mocha": "2.1.0",
+    "rimraf": "2.5.2"
   },
   "scripts": {
     "test": "node_modules/.bin/mocha"
