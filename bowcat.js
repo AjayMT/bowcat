@@ -29,18 +29,6 @@ var includeMins = opts.min || opts.m;
 var inputDir = opts._[0] || '.';
 var outputDir = opts.o || path.join('.', 'build');
 
-inputDir = bowerDirectory.sync({ cwd: path.resolve(inputDir) });
-
-outputDir = path.resolve(outputDir);
-
-var pkgs = fs.readdirSync(inputDir);
-
-pkgs = _.map(pkgs, function (p) {
-  return path.join(inputDir, p);
-});
-
-var concatedPkgs = [];
-
 // constructFileList: create a list of files to concat for a particular
 // package. 'dir' is the path to the package, 'mains' is the 'main' field
 // in the package's bower.json, 'minified' is whether or not to include
@@ -162,5 +150,15 @@ module.exports = {
   constructFileList: constructFileList
 };
 
-if (require.main === module)
+if (require.main === module) {
+  inputDir = bowerDirectory.sync({ cwd: path.resolve(inputDir) });
+  outputDir = path.resolve(outputDir);
+  var pkgs = fs.readdirSync(inputDir);
+
+  pkgs = _.map(pkgs, function (p) {
+      return path.join(inputDir, p);
+  });
+  var concatedPkgs = [];
+
   concatPackages(pkgs, outputDir, includeMins);
+}
